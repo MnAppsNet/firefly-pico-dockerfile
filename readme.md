@@ -7,7 +7,7 @@ To build firefly-pico image, CD into the repo folder and use the following comma
 
 > docker build ./ --tag firefly-pico:test
 
-You can use whatever tag you want but don't forget change it also in the docker-compose files.
+Already build image: https://hub.docker.com/r/mnapps/firefly-pico
 
 # Docker Compose Files
 There are two docker compose files:

@@ -141,7 +141,7 @@ services:
       - firefly_iii
 
   firefly-pico:
-    image: firefly-pico:test
+    image: mnapps/firefly-pico:1.1.0-multi
     container_name: firefly_pico
     ports:
       - "6976:80"
