@@ -1,0 +1,176 @@
+#
+# The Firefly III Data Importer will ask you for the Firefly III URL and a "Client ID".
+# You can generate the Client ID at http://localhost/profile (after registering)
+# The Firefly III URL is: http://app:8080
+#
+# Other URL's will give 500 | Server Error
+#
+
+services:
+  app:
+    image: fireflyiii/core:latest
+    hostname: app
+    container_name: firefly_iii_core
+    networks:
+      - firefly_iii
+    restart: always
+    volumes:
+      - /HOST_PATH_HERE/upload:/var/www/html/storage/upload
+    environment:
+
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - SITE_OWNER=changeme@example.com
+      - APP_KEY=32_CHAR_KEY_HERE
+      - DEFAULT_LANGUAGE=en_US
+      - DEFAULT_LOCALE=equal
+      - TZ=Europe/Athens
+      - TRUSTED_PROXIES=**
+      - LOG_CHANNEL=stack
+      - APP_LOG_LEVEL=notice
+      - AUDIT_LOG_LEVEL=emergency
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=SECRET_PASSWORD
+      - MYSQL_USE_SSL=false
+      - MYSQL_SSL_VERIFY_SERVER_CERT=true
+      - MYSQL_SSL_CAPATH=/etc/ssl/certs/
+      - MYSQL_SSL_CA=
+      - MYSQL_SSL_CERT=
+      - MYSQL_SSL_KEY=
+      - MYSQL_SSL_CIPHER=
+      - PGSQL_SSL_MODE=prefer
+      - PGSQL_SSL_ROOT_CERT=null
+      - PGSQL_SSL_CERT=null
+      - PGSQL_SSL_KEY=null
+      - PGSQL_SSL_CRL_FILE=null
+      - PGSQL_SCHEMA=public
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - REDIS_SCHEME=tcp
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=
+      - REDIS_PASSWORD=
+      - REDIS_DB="0"
+      - REDIS_CACHE_DB="1"
+      - COOKIE_PATH="/"
+      - COOKIE_SECURE=false
+      - COOKIE_SAMESITE=lax
+      - MAIL_MAILER=log
+      - MAIL_HOST=null
+      - MAIL_PORT=2525
+      - MAIL_FROM=changeme@example.com
+      - MAIL_USERNAME=null
+      - MAIL_PASSWORD=null
+      - MAIL_ENCRYPTION=null
+      - MAIL_SENDMAIL_COMMAND=
+      - MAILGUN_DOMAIN=
+      - MAILGUN_SECRET=
+      - MAILGUN_ENDPOINT=api.mailgun.net
+      - MANDRILL_SECRET=
+      - SPARKPOST_SECRET=
+      - SEND_ERROR_MESSAGE=true
+      - SEND_REPORT_JOURNALS=true
+      - ENABLE_EXTERNAL_MAP=false
+      - ENABLE_EXCHANGE_RATES=false
+      - ENABLE_EXTERNAL_RATES=false
+      - MAP_DEFAULT_LAT=51.983333
+      - MAP_DEFAULT_LONG=5.916667
+      - MAP_DEFAULT_ZOOM=6
+      - AUTHENTICATION_GUARD=web
+      - AUTHENTICATION_GUARD_HEADER=REMOTE_USER
+      - AUTHENTICATION_GUARD_EMAIL=
+      - PASSPORT_PRIVATE_KEY=
+      - PASSPORT_PUBLIC_KEY=
+      - CUSTOM_LOGOUT_URL=
+      - DISABLE_FRAME_HEADER=false
+      - DISABLE_CSP_HEADER=false
+      - TRACKER_SITE_ID=
+      - TRACKER_URL=
+      - ALLOW_WEBHOOKS=false
+      - STATIC_CRON_TOKEN=
+      - DKR_BUILD_LOCALE=false
+      - DKR_CHECK_SQLITE=true
+      - APP_NAME=FireflyIII
+      - BROADCAST_DRIVER=log
+      - QUEUE_DRIVER=sync
+      - CACHE_PREFIX=firefly
+      - PUSHER_KEY=
+      - IPINFO_TOKEN=
+      - PUSHER_SECRET=
+      - PUSHER_ID=
+      - DEMO_USERNAME=
+      - DEMO_PASSWORD=
+      - FIREFLY_III_LAYOUT=v1
+      - APP_URL=FIREFLY_URL_HERE
+    ports:
+      - '8888:8080'
+    expose:
+      - 8080
+    depends_on:
+      - db
+  db:
+    image: mariadb:lts
+    hostname: db
+    container_name: firefly_iii_db
+    networks:
+      - firefly_iii
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=SECRET_PASSWORD
+      - MYSQL_DATABASE=firefly
+    volumes:
+      - /HOST_PATH_HERE/mysql:/var/lib/mysql
+
+  cron:
+    #
+    # To make this work, set STATIC_CRON_TOKEN in your .env file or as an environment variable and replace REPLACEME below
+    # The STATIC_CRON_TOKEN must be *exactly* 32 characters long
+    #
+    image: alpine
+    container_name: firefly_iii_cron
+    restart: always
+    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/REPLACEME\" | crontab - && crond -f -L /dev/stdout"
+    networks:
+      - firefly_iii
+
+  firefly-pico:
+    image: firefly_pico_arm64:latest
+    container_name: firefly_pico
+    ports:
+      - "6976:80"
+    environment:
+      - FIREFLY_URL=http://app:8080
+      - DB_CONNECTION=pgsql
+      - DB_HOST=firefly-pico-postgresql
+      - DB_PORT=5432
+      - DB_DATABASE=firefly-pico
+      - DB_USERNAME=firefly-pico
+      - DB_PASSWORD=SECRET_PASSWORD
+      - TZ=Europe/Athens
+    depends_on:
+      - firefly-pico-postgresql
+    networks:
+      - firefly_iii
+
+  firefly-pico-postgresql:
+    image: postgres:latest
+    container_name: firefly_pico_db
+    environment:
+      - POSTGRES_DB=firefly-pico
+      - POSTGRES_USER=firefly-pico
+      - POSTGRES_PASSWORD=SECRET_PASSWORD
+    volumes:
+      - /HOST_PATH_HERE/pico:/var/lib/postgresql/data
+    networks:
+      - firefly_iii
+
+networks:
+  firefly_iii:
+    driver: bridge

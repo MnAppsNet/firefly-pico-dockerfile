@@ -1,0 +1,7 @@
+back/vendor
+README.md
+.git
+.github
+.gitignore
+Dockerfile*
+docker-compose*
