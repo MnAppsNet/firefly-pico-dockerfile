@@ -151,6 +151,13 @@ RUN adduser \
     --ingroup www-data \
     --no-create-home \
     www-data
+RUN mkdir -p /tmp/nginx/
+RUN chown \
+   -R :www-data \
+   /tmp/nginx
+RUN chmod \
+   -R 772 \
+   /tmp/nginx
 RUN chown \
    -R :www-data \
    /var/www/html/storage
