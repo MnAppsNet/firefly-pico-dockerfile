@@ -48,6 +48,7 @@ COPY docker/conf/supervisor/nginx.ini /etc/supervisor.d/nginx.ini
 # Configure PHP
 RUN mkdir -p /run/php/
 RUN touch /run/php/php8.2-fpm.pid
+RUN mkdir -p /etc/php82/php-fpm.d
 RUN rm /etc/php82/php-fpm.conf
 COPY docker/conf/php-fpm/php-fpm.conf /etc/php82/php-fpm.conf
 COPY docker/conf/php-fpm/www.conf /etc/php82/php-fpm.d/www.conf
