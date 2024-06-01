@@ -17,9 +17,9 @@ There are two docker compose files:
 In both compose files you need to replace the following placeholders:
 * **HOST_PATH_HERE** : Replace with host path to store data
 * **32_CHAR_KEY_HERE** : Change with 32 char random string
-* **SECRET_PASSWORD** : Change with a firefly database password (user random string)
+* **SECRET_PASSWORD** : Change with a random password
 * **FIREFLY_URL_HERE** : Change with firefly URL
 
 You can also adapt any other Firefly environment variable based on your needs 
 
-This is just a dockerfile, all the credits for firefly-pico goes to [cioraneanu](https://github.com/cioraneanu) :)
+This is just a dockerfile, all credits for firefly-pico go to [cioraneanu](https://github.com/cioraneanu) :)
