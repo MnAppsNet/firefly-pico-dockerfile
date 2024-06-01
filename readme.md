@@ -13,6 +13,7 @@ Already build image: https://hub.docker.com/r/mnapps/firefly-pico
 There are two docker compose files:
 * **docker-compose-firefly+pico.yml** : To setup firefly along with firefly-pico
 * **docker-compose-pico.yml** : To setup firefly-pico standalone
+
 In both compose files you need to replace the following placeholders:
 * **HOST_PATH_HERE** : Replace with host path to store data
 * **32_CHAR_KEY_HERE** : Change with 32 char random string
