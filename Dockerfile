@@ -2,7 +2,7 @@ FROM composer:latest AS composer_base
 FROM alpine:latest
 
 ARG REPO=https://github.com/cioraneanu/firefly-pico.git
-ARG BRANCH=dev
+ARG BRANCH=main
 
 # Installing composer
 COPY --from=composer_base /usr/bin/composer /usr/local/bin/composer
