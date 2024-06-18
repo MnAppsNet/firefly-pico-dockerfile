@@ -1,3 +1,7 @@
+No longer relevant, dockerfile was merged into [firefly-pico](https://github.com/cioraneanu/firefly-pico). 
+
+
+------
 # Dockerfile for firefly-pico
 This is a Dockerfile to build [firefly-pico](https://github.com/cioraneanu/firefly-pico) for both amd64 and arm64 platforms using alpine.
 Firefly-pico is a companion web app for [firefly III](https://github.com/firefly-iii/firefly-iii).
